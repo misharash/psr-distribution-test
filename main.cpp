@@ -28,8 +28,10 @@
 #include "evol.hpp"
 #include "delete.hpp"
 #include "birth.hpp"
+#include <cfenv> //nan handling
 
 int main(int argc, char** argv) {
+    feenableexcept(FE_INVALID | FE_OVERFLOW); //raise exception when nan creates
 	//random setup
 	std::random_device rd;
 	std::mt19937 e2(rd());
