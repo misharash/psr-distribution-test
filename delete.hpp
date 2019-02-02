@@ -19,9 +19,8 @@
     <https://www.gnu.org/licenses/>.
 */
 
-//Stuff related to pulsar creation in the beginning of the simulation
+//Stuff related to removing pulsars
 #include "pulsar.hpp"
 #include <vector>
-#include <random>
 
-double create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist, std::mt19937& e2);
+void delete_all(std::vector<Pulsar> p);

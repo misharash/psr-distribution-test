@@ -25,6 +25,9 @@
 #include <random>
 #include "create.hpp"
 #include "dump.hpp"
+#include "evol.hpp"
+#include "delete.hpp"
+#include "birth.hpp"
 
 int main(int argc, char** argv) {
 	//random setup
@@ -34,11 +37,22 @@ int main(int argc, char** argv) {
     
 	std::vector<Pulsar> p(Nstart); //main array
     
-    dump_init();
+    dump_init(); //initialize dumping
     
-    create_all(p, dist, e2); //create initial pulsars
+    double I_N = create_all(p, dist, e2); //create initial pulsars
     
-    dump(p, 0, 0); //dump initial distribution
+    CITable Q_B_citable;
+    double I_Q = birth_init(Q_B_citable); //prepare pulsar birth
+    
+    //calculate timestep from pulsar numbers and distribution function integrals
+    double dt = 1e15 * I_N * Nbirth / (M_PI * A * I_Q * Nstart);
+    
+    for (int i=0; i<=Nsteps; ++i) { //main loop
+        if (i % Ndump == 0) dump(p, dt * i, i / Ndump); //do dump every Ndump-th step
+        evolve_all(p, dt); //evolve
+        delete_all(p); //delete unrelevant pulsars
+        birth_all(p, Q_B_citable, dist, e2); //create new pulsar(s)
+    }
     
 	return 0;
 }

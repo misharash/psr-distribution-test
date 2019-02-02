@@ -19,9 +19,23 @@
     <https://www.gnu.org/licenses/>.
 */
 
-//Stuff related to pulsar creation in the beginning of the simulation
+//Stuff related to removing pulsars
 #include "pulsar.hpp"
+#include "params.hpp"
 #include <vector>
-#include <random>
+#include <algorithm>
 
-double create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist, std::mt19937& e2);
+//checks if the pulsar crossed parameter boundaries
+bool bound_check(Pulsar& psr) {
+    //chi boundary check - their crossing is unphysical so just fix them
+    if (psr.chi > chimax) psr.chi = chimax;
+    if (psr.chi < chimin) psr.chi = chimin;
+    //P boundary check
+    return (psr.P > Pmax)||(psr.P < Pmin); //second part shouldn't apply in any braking model
+}
+
+//function that deletes pulsars from array
+void delete_all(std::vector<Pulsar> p) {
+    p.erase(std::remove_if(p.begin(), p.end(), bound_check), p.end()); //deletes pulsar that crossed boundaries
+    //maybe later should apply here death function
+}

@@ -19,9 +19,22 @@
     <https://www.gnu.org/licenses/>.
 */
 
-//Stuff related to pulsar creation in the beginning of the simulation
+//Pulsar evolution with time
 #include "pulsar.hpp"
+#include "params.hpp"
+#include <cmath>
 #include <vector>
-#include <random>
 
-double create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist, std::mt19937& e2);
+void evolve(Pulsar& p, double dt) {
+	double schi = sin(p.chi);
+	double cchi = cos(p.chi);
+	double Q_BGI = A * pow(p.P, 15./14) * pow(p.B12, -4./7) / sqrt(cchi);
+	double C = 2*sqrt(2*M_PI*R/c); //here 2 is to be fixed
+	p.P += dt*1e-15 * p.B12*p.B12/p.P * (Q_BGI * cchi*cchi + C);
+	p.chi += dt*1e-15 * Q_BGI * p.B12*p.B12/p.P/p.P * schi * cchi;
+}
+
+void evolve_all(std::vector<Pulsar>& p, double dt) {
+    for (auto&& psr: p)
+        evolve(psr, dt);
+}

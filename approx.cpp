@@ -20,14 +20,12 @@
 */
 
 //Approximate operations common for multiple other files
-#include <vector>
-#include <utility>
-#include <functional>
+#include "approx.hpp"
 #include <algorithm>
 
 //dumb middle-rectangles cumulative integrator
-std::vector<std::pair<double, double>> cumint(std::function<double(double)> f, double xmin, double xmax, int nsteps) {
-	std::vector<std::pair<double, double>> r(nsteps+1);
+CITable cumint(std::function<double(double)> f, double xmin, double xmax, int nsteps) {
+	CITable r(nsteps+1);
 	r[0].first = xmin;
 	r[0].second = 0;
 	double dx = (xmax - xmin) / nsteps;
@@ -40,7 +38,7 @@ std::vector<std::pair<double, double>> cumint(std::function<double(double)> f, d
 }
 
 //dumb function that inverses normed integral using cumulative table from above function
-double invint(double val, std::vector<std::pair<double, double>> const& citable) {
+double invint(double val, CITable const& citable) {
     val *= citable.back().second; //applying norm here
     //binary search to find first element with integral more or equal than value
     auto nextIt = std::lower_bound(citable.begin(), citable.end(), val, [](std::pair<double, double> const& x, double y) { return x.second < y; });

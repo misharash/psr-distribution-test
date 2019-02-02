@@ -57,8 +57,8 @@ double create_B(double x, std::vector<std::pair<double, double>> const& N_B_cita
     return invint(x, N_B_citable);
 }
 
-//function called from main
-void create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist, std::mt19937& e2) {
+//function that creates initial pulsars and returns distribution function integral over parameter area
+double create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist, std::mt19937& e2) {
     //precalculate complicated integrals
     auto N_chi_citable = cumint(N_chi, chimin, chimax, intsteps);
     auto N_B_citable = cumint(N_B, B12min, B12max, intsteps);
@@ -68,4 +68,5 @@ void create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist, 
         p[i].chi = create_chi(dist(e2), N_chi_citable);
         p[i].B12 = create_B(dist(e2), N_B_citable);
     }
+    return N_chi_citable.back().second * N_B_citable.back().second / 3 * (Pmax*Pmax*Pmax - Pmin*Pmin*Pmin);
 }

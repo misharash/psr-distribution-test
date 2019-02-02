@@ -19,9 +19,10 @@
     <https://www.gnu.org/licenses/>.
 */
 
-//Stuff related to pulsar creation in the beginning of the simulation
+//Stuff related to new pulsar generation during the simulation
 #include "pulsar.hpp"
-#include <vector>
-#include <random>
+#include "approx.hpp"
 
-double create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist, std::mt19937& e2);
+double birth_init(CITable& Q_B_citable);
+
+void birth_all(std::vector<Pulsar>& p, CITable& Q_B_citable, std::uniform_real_distribution<>& dist, std::mt19937& e2);
