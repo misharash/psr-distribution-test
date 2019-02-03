@@ -20,9 +20,14 @@
 */
 
 //Stuff related to new pulsar generation during the simulation
+#ifndef BIRTH_HPP
+#define BIRTH_HPP
+
 #include "pulsar.hpp"
 #include "approx.hpp"
 
 double birth_init(CITable& Q_B_citable);
 
 void birth_all(std::vector<Pulsar>& p, CITable const& Q_B_citable, std::uniform_real_distribution<>& dist, std::mt19937& e2);
+
+#endif

@@ -20,7 +20,12 @@
 */
 
 //Restart program using data from dump file
+#ifndef RESTART_HPP
+#define RESTART_HPP
+
 #include "pulsar.hpp"
 #include <vector>
 
 void restart(std::vector<Pulsar>& p, int id, double& t, int num, double& dt);
+
+#endif

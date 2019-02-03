@@ -20,7 +20,12 @@
 */
 
 //Stuff related to removing pulsars
+#ifndef DELETE_HPP
+#define DELETE_HPP
+
 #include "pulsar.hpp"
 #include <vector>
 
 void delete_all(std::vector<Pulsar>& p);
+
+#endif

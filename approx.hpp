@@ -20,8 +20,8 @@
 */
 
 //Approximate operations common for multiple other files
-#ifndef INTEGRATE_HPP
-#define INTEGRATE_HPP
+#ifndef APPROX_HPP
+#define APPROX_HPP
 
 #include <vector>
 #include <utility>

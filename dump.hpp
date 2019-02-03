@@ -20,8 +20,13 @@
 */
 
 //Data output into file
+#ifndef DUMP_HPP
+#define DUMP_HPP
+
 #include <vector>
 #include "pulsar.hpp"
 
 void dump_init();
 void dump(std::vector<Pulsar> const& p, int id, double t, int num, double dt);
+
+#endif

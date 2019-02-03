@@ -20,7 +20,12 @@
 */
 
 //Pulsar evolution with time
+#ifndef EVOL_HPP
+#define EVOL_HPP
+
 #include "pulsar.hpp"
 #include <vector>
 
 void evolve_all(std::vector<Pulsar>& p, double dt);
+
+#endif

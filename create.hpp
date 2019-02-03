@@ -20,8 +20,13 @@
 */
 
 //Stuff related to pulsar creation in the beginning of the simulation
+#ifndef CREATE_HPP
+#define CREATE_HPP
+
 #include "pulsar.hpp"
 #include <vector>
 #include <random>
 
 double create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist, std::mt19937& e2);
+
+#endif
