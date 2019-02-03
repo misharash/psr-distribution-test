@@ -51,7 +51,7 @@ double birth_chi(double x) {
 	return chimin*(1-x) + chimax*x;
 }
 
-double birth_B12(double x, std::vector<std::pair<double, double>>& Q_B_citable) {
+double birth_B12(double x, CITable const& Q_B_citable) {
 	return invint(x, Q_B_citable);
 }
 
@@ -62,7 +62,7 @@ double birth_init(CITable& Q_B_citable) {
 }
 
 //add new pulsar(s) to the array
-void birth_all(std::vector<Pulsar>& p, CITable& Q_B_citable, std::uniform_real_distribution<>& dist, std::mt19937& e2) {
+void birth_all(std::vector<Pulsar>& p, CITable const& Q_B_citable, std::uniform_real_distribution<>& dist, std::mt19937& e2) {
     for (int i=0; i<Nbirth; ++i)
         p.push_back({birth_P(dist(e2)), birth_chi(dist(e2)), birth_B12(dist(e2), Q_B_citable)});
 }

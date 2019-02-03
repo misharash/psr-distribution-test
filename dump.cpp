@@ -29,11 +29,13 @@ void dump_init() {
     system("mkdir dumps");
 }
 
-void dump(std::vector<Pulsar> const& p, double t, int num) {
+void dump(std::vector<Pulsar> const& p, int id, double t, int num) {
     //open file
     char filename[50];
-    sprintf(filename, "dumps/dump%05d", num);
+    sprintf(filename, "dumps/dump%05d-%02d", num, id);
     FILE* fp = fopen(filename, "wb");
+    
+    printf("Process %d: dump %d, time %le s\n", id, num, t);
     
     //write header: time and pulsar count
     fprintf(fp, "%le ", t);

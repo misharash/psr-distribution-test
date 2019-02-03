@@ -24,4 +24,4 @@
 #include "pulsar.hpp"
 
 void dump_init();
-void dump(std::vector<Pulsar> const& p, double t, int num);
+void dump(std::vector<Pulsar> const& p, int id, double t, int num);

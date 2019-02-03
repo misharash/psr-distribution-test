@@ -29,9 +29,30 @@
 #include "delete.hpp"
 #include "birth.hpp"
 #include <cfenv> //nan handling
+#include <unistd.h> //forking
+#include <sys/wait.h> //waiting for children
+#include <cstdio>
 
+//first argument is number of processes to create
 int main(int argc, char** argv) {
+    //stuff common for all processes
     feenableexcept(FE_INVALID | FE_OVERFLOW); //raise exception when nan creates
+    
+    CITable Q_B_citable;
+    double I_Q = birth_init(Q_B_citable); //prepare pulsar birth
+    
+    dump_init(); //initialize dumping
+    
+    //get number of processes to create, default is 1
+    int nproc = 1;
+    if (argc > 1) sscanf(argv[1], "%d", &nproc);
+    
+    int myid; //process individual id
+    for (myid = nproc-1; myid > 0; --myid) //main process myid will be 0
+        if (!fork()) break; //only main process creates children
+    printf("Process with id %d started\n", myid);
+    
+    //stuff individual for every process
 	//random setup
 	std::random_device rd;
 	std::mt19937 e2(rd());
@@ -39,22 +60,22 @@ int main(int argc, char** argv) {
     
 	std::vector<Pulsar> p(Nstart); //main array
     
-    dump_init(); //initialize dumping
-    
     double I_N = create_all(p, dist, e2); //create initial pulsars
-    
-    CITable Q_B_citable;
-    double I_Q = birth_init(Q_B_citable); //prepare pulsar birth
     
     //calculate timestep from pulsar numbers and distribution function integrals
     double dt = 1e15 * I_N * Nbirth / (M_PI * A * I_Q * Nstart);
     
     for (int i=0; i<=Nsteps; ++i) { //main loop
-        if (i % Ndump == 0) dump(p, dt * i, i / Ndump); //do dump every Ndump-th step
+        if (i % Ndump == 0) dump(p, myid, dt * i, i / Ndump); //do dump every Ndump-th step
         evolve_all(p, dt); //evolve
         delete_all(p); //delete unrelevant pulsars
         birth_all(p, Q_B_citable, dist, e2); //create new pulsar(s)
     }
     
+    int wstatus; //needed to call wait
+    if (!myid) //main process waits for all children
+        for (int i=1; i<nproc; ++i) wait(&wstatus);
+    
+    printf("Process with id %d finished\n", myid);
 	return 0;
 }

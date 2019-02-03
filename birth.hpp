@@ -25,4 +25,4 @@
 
 double birth_init(CITable& Q_B_citable);
 
-void birth_all(std::vector<Pulsar>& p, CITable& Q_B_citable, std::uniform_real_distribution<>& dist, std::mt19937& e2);
+void birth_all(std::vector<Pulsar>& p, CITable const& Q_B_citable, std::uniform_real_distribution<>& dist, std::mt19937& e2);
