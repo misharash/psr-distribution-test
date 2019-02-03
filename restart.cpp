@@ -45,5 +45,7 @@ void restart(std::vector<Pulsar>& p, int id, double& t, int num, double& dt) {
         fread(&p[i].B12, sizeof(double), 1, fp);
     }
     
+    fclose(fp); //close file
+    
     printf("Process %d: restarted from dump %d, time %le s, timestep %le s\n", id, num, t, dt);
 }

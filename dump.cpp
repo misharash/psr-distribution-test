@@ -49,4 +49,6 @@ void dump(std::vector<Pulsar> const& p, int id, double t, int num, double dt) {
         fwrite(&psr.chi, sizeof(double), 1, fp);
         fwrite(&psr.B12, sizeof(double), 1, fp);
     }
+    
+    fclose(fp); //close file
 }
