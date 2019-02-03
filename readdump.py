@@ -17,12 +17,13 @@
 # along with psr-distribution-test. If not, see
 # <https://www.gnu.org/licenses/>.
 
-# function that reads all data from dump
-from numpy import fromfile, float64
+from numpy import fromfile, float64, zeros, append
+from glob import glob
 
 
-def rd(no):
-    f = open("dumps/dump%05d" % no, "rb")
+# function that reads data from single dump
+def rds(filename):
+    f = open(filename, "rb")
     # read header
     header = f.readline().decode()
     L = header.split()
@@ -31,4 +32,19 @@ def rd(no):
     # read body
     body = fromfile(f, dtype=float64, count=3*N)
     P, chi, B12 = body.reshape((N, 3)).T
+    return t, N, P, chi, B12
+
+
+# function that joins data from all dumps with given number
+def rd(no, dump_dir="dumps/"):
+    t, N, P, chi, B12 = 0, 0, zeros(0), zeros(0), zeros(0)
+    for filename in glob(dump_dir + "dump%05d-??" % no):
+        tt, tN, tP, tchi, tB12 = rds(filename)
+        if (tt != t) and (t != 0):
+            print("Warining: time in %s differs from others" % filename)
+        t = tt
+        N += tN
+        P = append(P, tP)
+        chi = append(chi, tchi)
+        B12 = append(B12, tB12)
     return t, N, P, chi, B12
