@@ -24,6 +24,7 @@
 #include <vector>
 #include <random>
 #include "create.hpp"
+#include "restart.hpp"
 #include "dump.hpp"
 #include "evol.hpp"
 #include "delete.hpp"
@@ -34,6 +35,7 @@
 #include <cstdio>
 
 //first argument is number of processes to create
+//second argument if present is number of dump to try to restart from
 int main(int argc, char** argv) {
     //stuff common for all processes
     feenableexcept(FE_INVALID | FE_OVERFLOW); //raise exception when nan creates
@@ -59,14 +61,24 @@ int main(int argc, char** argv) {
 	std::uniform_real_distribution<> dist(0, 1);
     
 	std::vector<Pulsar> p(Nstart); //main array
+    double dt; //timestep
     
-    double I_N = create_all(p, dist, e2); //create initial pulsars
-    
-    //calculate timestep from pulsar numbers and distribution function integrals
-    double dt = 1e15 * I_N * Nbirth / (M_PI * A * I_Q * Nstart);
+    //restart-related stuff
+    int nrdump = 0; //number of first dump/dump to restart from
+    double t0 = 0; //time of start/restart
+    if (argc > 2) { //restart only if second argument exists
+        sscanf(argv[2], "%d", &nrdump);
+        restart(p, myid, t0, nrdump, dt); //attempt to read needed data from dump
+    }
+    else {
+        double I_N = create_all(p, dist, e2); //create initial pulsars
+        //calculate timestep from pulsar numbers and distribution function integrals
+        dt = 1e15 * I_N * Nbirth / (M_PI * A * I_Q * Nstart);
+        printf("Process %d: timestep %le s\n", myid, dt);
+    }
     
     for (int i=0; i<=Nsteps; ++i) { //main loop
-        if (i % Ndump == 0) dump(p, myid, dt * i, i / Ndump); //do dump every Ndump-th step
+        if (i % Ndump == 0) dump(p, myid, t0 + dt * i, nrdump + i / Ndump, dt); //do dump every Ndump-th step
         evolve_all(p, dt); //evolve
         delete_all(p); //delete unrelevant pulsars
         birth_all(p, Q_B_citable, dist, e2); //create new pulsar(s)

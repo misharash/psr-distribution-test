@@ -19,9 +19,8 @@
     <https://www.gnu.org/licenses/>.
 */
 
-//Data output into file
-#include <vector>
+//Restart program using data from dump file
 #include "pulsar.hpp"
+#include <vector>
 
-void dump_init();
-void dump(std::vector<Pulsar> const& p, int id, double t, int num, double dt);
+void restart(std::vector<Pulsar>& p, int id, double& t, int num, double& dt);

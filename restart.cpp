@@ -19,34 +19,31 @@
     <https://www.gnu.org/licenses/>.
 */
 
-//Data output into file
-#include <cstdio>
-#include <cstdlib>
-#include <vector>
+//Restart program using data from dump file
 #include "pulsar.hpp"
+#include <vector>
+#include <cstdio>
 
-void dump_init() {
-    system("mkdir dumps");
-}
-
-void dump(std::vector<Pulsar> const& p, int id, double t, int num, double dt) {
+//function that restores data from dump
+void restart(std::vector<Pulsar>& p, int id, double& t, int num, double& dt) {
     //open file
     char filename[50];
     sprintf(filename, "dumps/dump%05d-%02d", num, id);
-    FILE* fp = fopen(filename, "wb");
+    FILE* fp = fopen(filename, "rb");
     
-    printf("Process %d: dump %d, time %le s\n", id, num, t);
+    //read header: time, pulsar count and timestep
+    char buf[100];
+    fgets(buf, 100, fp); //read header string from file to skip to the binary data
+    int N; //dump's pulsar count
+    sscanf(buf, "%le %d %le", &t, &N, &dt); //parse header string
     
-    //write header: time, pulsar count and timestep
-    fprintf(fp, "%le ", t);
-    fprintf(fp, "%d ", static_cast<int>(p.size()));
-    fprintf(fp, "%.16le ", dt); //more precisely since it will be used in calculations after restart
-    fprintf(fp, "\n");
-    
-    //write all other data in binary format
-    for (auto&& psr: p) {
-        fwrite(&psr.P, sizeof(double), 1, fp);
-        fwrite(&psr.chi, sizeof(double), 1, fp);
-        fwrite(&psr.B12, sizeof(double), 1, fp);
+    p.resize(N); //prepare pulsar vector
+    //read all other data in binary format
+    for (int i=0; i<N; i++) {
+        fread(&p[i].P, sizeof(double), 1, fp);
+        fread(&p[i].chi, sizeof(double), 1, fp);
+        fread(&p[i].B12, sizeof(double), 1, fp);
     }
+    
+    printf("Process %d: restarted from dump %d, time %le s, timestep %le s\n", id, num, t, dt);
 }
