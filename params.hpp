@@ -34,10 +34,10 @@ const double c = 3e10; //speed of light
 const double A = 1.; //coefficient for Q_BGI
 
 //simulation settings
-const int Nstart = 1000000; //how many pulsars to generate initially
+const int Nstart = 200000; //how many pulsars to generate initially
 const int Nbirth = 1; //how many pulsars to add every birth step
-const int Ndump = 100; //how many steps to do between dumps
-const int Nsteps = 1000; //how many steps to do at all
+const int Ndump = Nstart/100; //how many steps to do between dumps
+const int Nsteps = 10*Nstart; //how many steps to do at all
 
 //numerical settings
 const int intsteps = 100000; //how many steps to use in numerical integration
