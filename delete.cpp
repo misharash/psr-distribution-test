@@ -35,7 +35,7 @@ bool bound_check(Pulsar& psr) {
 }
 
 //function that deletes pulsars from array
-void delete_all(std::vector<Pulsar> p) {
+void delete_all(std::vector<Pulsar>& p) {
     p.erase(std::remove_if(p.begin(), p.end(), bound_check), p.end()); //deletes pulsar that crossed boundaries
     //maybe later should apply here death function
 }

@@ -23,4 +23,4 @@
 #include "pulsar.hpp"
 #include <vector>
 
-void delete_all(std::vector<Pulsar> p);
+void delete_all(std::vector<Pulsar>& p);
