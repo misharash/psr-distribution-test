@@ -30,7 +30,7 @@ void evolve(Pulsar& p, double dt) {
 	double cchi = cos(p.chi);
     if (cchi <= 0) return; //prevent division by zero or square root of negative, nothing happens in this case
 	double Q_BGI = A * pow(p.P, 15./14) * pow(p.B12, -4./7) / sqrt(cchi);
-	double C = 2*sqrt(2*M_PI/p.P*R/c); //here 2 is to be fixed
+	double C = sqrt(2*M_PI/p.P*R/c); //1 instead of 2 is one of variants
 	p.P += dt*1e-15 * p.B12*p.B12/p.P * (Q_BGI * cchi*cchi + C);
 	p.chi += dt*1e-15 * Q_BGI * p.B12*p.B12/p.P/p.P * schi * cchi;
 }

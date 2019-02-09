@@ -43,7 +43,7 @@ const int Nsteps = 10*Nstart; //how many steps to do at all
 const int intsteps = 100000; //how many steps to use in numerical integration
 
 //minimal and maximal periods in seconds
-const double Pmin = 0.03;
+const double Pmin = 0.1;
 const double Pmax = 0.5;
 
 //minimal and maximal angles
