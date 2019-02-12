@@ -36,10 +36,10 @@ const double A = 1.; //coefficient for Q_BGI (evol.cpp)
 const double eps = sqrt(2*M_PI*R/c); //coefficient for C (evol.cpp)
 
 //simulation settings
-const int Nstart = 200000; //how many pulsars to generate initially
+const int Nstart = 50000; //how many pulsars to generate initially
 const int Nbirth = 1; //how many pulsars to add every birth step
 const int Ndump = Nstart/100; //how many steps to do between dumps
-const int Nsteps = 10*Nstart; //how many steps to do at all
+const int Nsteps = 50*Nstart; //how many steps to do at all
 
 //numerical settings
 const int intsteps = 100000; //how many steps to use in numerical integration
