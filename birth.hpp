@@ -25,9 +25,12 @@
 
 #include "pulsar.hpp"
 #include "approx.hpp"
+#include <tuple>
+#include <random>
 
-double birth_init(CITable& Q_B_citable);
+std::tuple<double, double, double, double> birth_init(CITable&, CITable&, CITable&, CITable&);
 
-void birth_all(std::vector<Pulsar>& p, CITable const& Q_B_citable, std::uniform_real_distribution<>& dist, std::mt19937& e2);
+void birth_all(std::vector<Pulsar>&, CITable const&, CITable const&, CITable const&, CITable const&,
+                            double, double, double, std::uniform_real_distribution<>&, std::mt19937&);
 
 #endif

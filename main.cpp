@@ -40,8 +40,18 @@ int main(int argc, char** argv) {
     //stuff common for all processes
     feenableexcept(FE_INVALID | FE_OVERFLOW); //raise exception when nan creates
     
-    CITable Q_B_citable;
-    double I_Q = birth_init(Q_B_citable); //prepare pulsar birth
+    CITable Q_B_citable, Q_chibound1_citable, Q_chibound2_citable, Q_Bbound2_citable;
+    double I_Q, I_Qb1, I_Qb2, I_Qb90;
+    std::tie(I_Q, I_Qb1, I_Qb2, I_Qb90) = birth_init(Q_B_citable, Q_chibound1_citable,
+                            Q_chibound2_citable, Q_Bbound2_citable); //prepare pulsar birth
+    //calculate number of boundary births per timestep
+    double Nbirthb1 = I_Qb1/I_Q * Nbirth;
+    printf("Boundary `birth` 1 will occur %.2e times per timestep\n", Nbirthb1);
+    double Nbirthb2 = I_Qb2/I_Q * Nbirth;
+    printf("Boundary `birth` 2 will occur %.2e times per timestep\n", Nbirthb2);
+    double Nbirthb90 = I_Qb90/I_Q * Nbirth;
+    printf("Boundary `birth` for orthogonal pulsars will occur %.2e times per timestep\n", Nbirthb90);
+    printf("ATTENTION! All above numbers are expected to be less then 1, otherwise program won't work correctly\n");
     
     dump_init(); //initialize dumping
     
@@ -73,7 +83,7 @@ int main(int argc, char** argv) {
     else {
         double I_N = create_all(p, dist, e2); //create initial pulsars
         //calculate timestep from pulsar numbers and distribution function integrals
-        dt = 1e15 * I_N * Nbirth / (M_PI * A * I_Q * Nstart);
+        dt = I_N * Nbirth / (I_Q * Nstart);
         printf("Process %d: timestep %le s\n", myid, dt);
     }
     
@@ -81,7 +91,8 @@ int main(int argc, char** argv) {
         if (i % Ndump == 0) dump(p, myid, t0 + dt * i, nrdump + i / Ndump, dt); //do dump every Ndump-th step
         evolve_all(p, dt); //evolve
         delete_all(p); //delete unrelevant pulsars
-        birth_all(p, Q_B_citable, dist, e2); //create new pulsar(s)
+        birth_all(p, Q_B_citable, Q_chibound1_citable, Q_chibound2_citable, Q_Bbound2_citable, Nbirthb1,
+                                                Nbirthb2, Nbirthb90, dist, e2); //create new pulsar(s)
     }
     
     int wstatus; //needed to call wait
