@@ -26,14 +26,9 @@
 #include <cmath>
 
 //parameters that are assumed to be the same for all pulsars
-//const double M = 2e33; //common pulsar mass (gram) - not needed now
-const double R = 1e6; //common pulsar radius (cm)
-
-const double c = 3e10; //speed of light
-
 const double A = 1.; //coefficient for Q_BGI (evol.cpp)
 
-const double eps = sqrt(2*M_PI*R/c); //coefficient for C (evol.cpp)
+const double eps = .01; //coefficient for C (evol.cpp)
 
 //simulation settings
 const int Nstart = 50000; //how many pulsars to generate initially
