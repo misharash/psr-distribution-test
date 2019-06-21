@@ -28,12 +28,8 @@
 void evolve(Pulsar& p, double dt) {
 	double schi = sin(p.chi);
 	double cchi = cos(p.chi);
-	double Q_BGI = 0;
-	if (cchi > 0) //prevent division by zero or square root of negative
-		Q_BGI = A * pow(p.P, 15./14) * pow(p.B12, -4./7) / sqrt(cchi);
-	double C = eps/sqrt(p.P);
-	p.P += dt*1e-15 * p.B12*p.B12/p.P * (Q_BGI * cchi*cchi + C);
-	p.chi += dt*1e-15 * Q_BGI * p.B12*p.B12/p.P/p.P * schi * cchi;
+	p.P += dt * K * p.B12*p.B12/p.P*(1+schi*schi);
+	p.chi -= dt * K * p.B12*p.B12/p.P/p.P*schi*cchi;
 }
 
 void evolve_all(std::vector<Pulsar>& p, double dt) {

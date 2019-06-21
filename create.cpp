@@ -32,14 +32,14 @@ double N_P(double P) { return P*P; }
 double N_chi(double chi) {
 	double schi = sin(chi);
 	double cchi = cos(chi);
-	return (chi - schi*cchi)/(schi*schi*schi*sqrt(cchi));
+	return (M_PI_2-chi-schi*cchi)/cchi/cchi/cchi;
 }
 
 double N_B(double B12) {
 	double temp = 1+B12;
 	temp *= temp;
 	temp *= temp;
-	return pow(B12, 4./7)/temp;
+	return 1/temp;
 }
 
 //generate parameters from random numbers distributed uniformly in [0,1]
@@ -68,5 +68,5 @@ double create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist
         p[i].chi = create_chi(dist(e2), N_chi_citable);
         p[i].B12 = create_B(dist(e2), N_B_citable);
     }
-    return N_chi_citable.back().second * N_B_citable.back().second / 3 * (Pmax*Pmax*Pmax - Pmin*Pmin*Pmin);
+    return N_chi_citable.back().second * N_B_citable.back().second / 3 * (Pmax*Pmax*Pmax - Pmin*Pmin*Pmin); //multipliers to be checked
 }

@@ -29,9 +29,9 @@
 
 //birth functions, not necessarily normed
 
-double Q_P(double P) { return P; }
+double Q_P(double P) { return 1; }
 
-double Q_chi(double chi) { return M_2_PI; }
+double Q_chi(double chi) { return sin(chi); }
 
 double Q_B(double B12) {
 	double temp = 1+B12;
@@ -43,12 +43,12 @@ double Q_B(double B12) {
 //generate parameters from random numbers distibuted uniformly in [0,1]
 
 double birth_P(double x) {
-	double P2 = Pmin*Pmin*(1-x) + Pmax*Pmax*x;
-	return sqrt(P2);
+	return Pmin*(1-x) + Pmax*x;
 }
 
 double birth_chi(double x) {
-	return chimin*(1-x) + chimax*x;
+    double cchi = cos(chimin)*(1-x)+cos(chimax)*x;
+	return acos(cchi);
 }
 
 double birth_B12(double x, CITable const& Q_B_citable) {
@@ -58,7 +58,7 @@ double birth_B12(double x, CITable const& Q_B_citable) {
 //function that precalculates complicated integrals
 double birth_init(CITable& Q_B_citable) {
     Q_B_citable = cumint(Q_B, B12min, B12max, intsteps);
-    return Q_B_citable.back().second / 2 * (Pmax*Pmax - Pmin*Pmin);
+    return Q_B_citable.back().second / 2 * (Pmax - Pmin); //multipliers to be checked
 }
 
 //add new pulsar(s) to the array
