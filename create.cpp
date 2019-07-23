@@ -48,22 +48,22 @@ double create_chi(double x, CITable& N_chi_citable) {
     return invint(x, N_chi_citable);
 }
 
-double create_B(double x, CITable& N_B_citable) {
-    return invint(x, N_B_citable);
+double create_B(double x) {
+    double Bp = (1-x)*pow(1+B12min, -2.7) + x*pow(1+B12max, -2.7);
+    return pow(Bp, -1/2.7);
 }
 
 //function that creates initial pulsars and returns distribution function integral over parameter area
 double create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist, std::mt19937& e2) {
     //precalculate complicated integrals
     auto N_chi_citable = cumint(N_chi, chimin, chimax, intsteps);
-    auto N_B_citable = cumint(N_B, B12min, B12max, intsteps);
     //regular pulsar count
     int Nreg = Nstart;
     //generate all parameters for every regular pulsar
     for (int i=0; i<Nreg; ++i) {
         p[i].P = create_P(dist(e2));
         p[i].chi = create_chi(dist(e2), N_chi_citable);
-        p[i].B12 = create_B(dist(e2), N_B_citable);
+        p[i].B12 = create_B(dist(e2));
     }
-    return N_chi_citable.back().second * N_B_citable.back().second / 3 * (Pmax*Pmax*Pmax - Pmin*Pmin*Pmin); //multipliers to be checked
+    return N_chi_citable.back().second * (Pmax*Pmax*Pmax - Pmin*Pmin*Pmin)/3 * (pow(1+B12min, -2.7) - pow(1+B12max, -2.7))/2.7; //multipliers to be checked
 }
