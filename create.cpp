@@ -35,12 +35,7 @@ double N_chi(double chi) {
 	return (M_PI_2-chi-schi*cchi)/cchi/cchi/cchi;
 }
 
-double N_B(double B12) {
-	double temp = 1+B12;
-	temp *= temp;
-	temp *= temp;
-	return 1/temp;
-}
+double N_B(double B12) { return pow(1+B12, -3.7); }
 
 //generate parameters from random numbers distributed uniformly in [0,1]
 
@@ -49,11 +44,11 @@ double create_P(double x) {
 	return cbrt(P3);
 }
 
-double create_chi(double x, std::vector<std::pair<double, double>> const& N_chi_citable) {
+double create_chi(double x, CITable& N_chi_citable) {
     return invint(x, N_chi_citable);
 }
 
-double create_B(double x, std::vector<std::pair<double, double>> const& N_B_citable) {
+double create_B(double x, CITable& N_B_citable) {
     return invint(x, N_B_citable);
 }
 
@@ -62,8 +57,10 @@ double create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist
     //precalculate complicated integrals
     auto N_chi_citable = cumint(N_chi, chimin, chimax, intsteps);
     auto N_B_citable = cumint(N_B, B12min, B12max, intsteps);
-    //generate all parameters for every pulsar
-    for (int i=0; i<Nstart; i++) {
+    //regular pulsar count
+    int Nreg = Nstart;
+    //generate all parameters for every regular pulsar
+    for (int i=0; i<Nreg; ++i) {
         p[i].P = create_P(dist(e2));
         p[i].chi = create_chi(dist(e2), N_chi_citable);
         p[i].B12 = create_B(dist(e2), N_B_citable);

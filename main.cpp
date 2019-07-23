@@ -40,8 +40,13 @@ int main(int argc, char** argv) {
     //stuff common for all processes
     feenableexcept(FE_INVALID | FE_OVERFLOW); //raise exception when nan creates
     
-    CITable Q_B_citable;
-    double I_Q = birth_init(Q_B_citable); //prepare pulsar birth
+    CITable Q_B_citable, Q_chibound_citable, Q_Bbound_citable;
+    double I_Q, I_Qb;
+    std::tie(I_Q, I_Qb) = birth_init(Q_B_citable, Q_chibound_citable); //prepare pulsar birth
+    //calculate number of boundary births per timestep
+    double Nbirthb = I_Qb/I_Q * Nbirth;
+    printf("Boundary `birth` will occur %.2e times per timestep\n", Nbirthb);
+    printf("ATTENTION! The number above is expected to be less then 1, otherwise program won't work correctly\n");
     
     dump_init(); //initialize dumping
     
@@ -81,7 +86,7 @@ int main(int argc, char** argv) {
         if (i % Ndump == 0) dump(p, myid, t0 + dt * i, nrdump + i / Ndump, dt); //do dump every Ndump-th step
         evolve_all(p, dt); //evolve
         delete_all(p); //delete unrelevant pulsars
-        birth_all(p, Q_B_citable, dist, e2); //create new pulsar(s)
+        birth_all(p, Q_B_citable, Q_chibound_citable, Nbirthb, dist, e2); //create new pulsar(s)
     }
     
     int wstatus; //needed to call wait
