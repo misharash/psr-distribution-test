@@ -35,23 +35,13 @@ double N_chi(double chi) {
 	return (chi - schi*cchi)/(schi*schi*schi*sqrt(cchi));
 }
 
-double N_B(double B12) {
-	double temp = 1+B12;
-	temp *= temp;
-	temp *= temp;
-	return pow(B12, 4./7)/temp;
-}
+double N_B(double B12) { return pow(B12, 4./7)*pow(1+B12, -3.7); }
 
 //initial distribution functions for orthogonal, not neccesarily normed
 
 double N_P90(double P) { return pow(P, 25./7); }
 
-double N_B90(double B12) {
-	double temp = 1+B12;
-	temp *= temp;
-	temp *= temp;
-	return 1/temp;
-}
+double N_B90(double B12) { return pow(1+B12, -3.7); }
 
 //generate parameters from random numbers distributed uniformly in [0,1]
 
@@ -74,10 +64,8 @@ double create_P90(double x) {
 }
 
 double create_B90(double x) {
-    double temp1 = 1+B12min;
-    double temp2 = 1+B12max;
-    double Bp = (1-x)/temp1/temp1/temp1 + x/temp2/temp2/temp2;
-    return 1/cbrt(Bp)-1;
+    double Bp = (1-x)*pow(1+B12min, -2.7) + x*pow(1+B12max, -2.7);
+    return pow(Bp, -1/2.7)-1;
 }
 
 //function that creates initial pulsars and returns distribution function integral over parameter area
@@ -87,9 +75,7 @@ double create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist
     auto N_B_citable = cumint(N_B, B12min, B12max, intsteps);
     double norm = N_chi_citable.back().second * N_B_citable.back().second / 3 * (Pmax*Pmax*Pmax - Pmin*Pmin*Pmin);
     //similar integrals for orthogonal pulsars
-    double temp1 = 1+B12min;
-    double temp2 = 1+B12max;
-    double norm90 = 7.*M_PI/29/eps * A * 7./32 * (pow(Pmax, 32./7) - pow(Pmin, 32./7)) / 3 * (1/temp1/temp1/temp1 - 1/temp2/temp2/temp2);
+    double norm90 = 7.*M_PI/29/eps * A * 7./32 * (pow(Pmax, 32./7) - pow(Pmin, 32./7)) / 2.7 * (pow(1+B12min, -2.7) - pow(1+B12max, -2.7));
     //regular pulsar count
     int Nreg = static_cast<int>(norm / (norm + norm90) * Nstart);
     //generate all parameters for every regular pulsar

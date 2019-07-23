@@ -31,12 +31,7 @@ double Q_P(double P) { return P; }
 
 double Q_chi(double chi) { return 2; }
 
-double Q_B(double B12) {
-	double temp = 1+B12;
-	temp *= temp;
-	temp *= temp;
-	return B12*B12/temp;
-}
+double Q_B(double B12) { return B12*B12*pow(1+B12, -3.7); }
 
 //`birth` functions on lower P boundary
 //cope with lack of pulsar flux through it
