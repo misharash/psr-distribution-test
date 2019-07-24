@@ -76,8 +76,8 @@ std::tuple<double, double> birth_init(CITable& Q_B_citable, CITable& Q_chibound_
     //Q_Bbound1 is the same as Q_B, skipping
     Q_chibound_citable = cumint(Q_chibound, chimin, chimax, intsteps);
     //Q_Bbound90 is the same as Q_B, skipping
-    double I_Q = Q_B_citable.back().second / 2 * (Pmax - Pmin); //multipliers to be checked
-    double I_Qbound = K * Pmin * Q_B_citable.back().second * Q_chibound_citable.back().second;
+    double I_Q = Q_B_citable.back().second * (Pmax - Pmin);
+    double I_Qbound = 0.5 * Pmin * Q_B_citable.back().second * Q_chibound_citable.back().second;
     return std::make_tuple(I_Q, I_Qbound);
 }
 

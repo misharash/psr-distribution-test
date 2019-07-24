@@ -65,5 +65,5 @@ double create_all(std::vector<Pulsar>& p, std::uniform_real_distribution<>& dist
         p[i].chi = create_chi(dist(e2), N_chi_citable);
         p[i].B12 = create_B(dist(e2));
     }
-    return N_chi_citable.back().second * (Pmax*Pmax*Pmax - Pmin*Pmin*Pmin)/3 * (pow(1+B12min, -2.7) - pow(1+B12max, -2.7))/2.7; //multipliers to be checked
+    return N_chi_citable.back().second * (Pmax*Pmax*Pmax - Pmin*Pmin*Pmin)/3 * (pow(1+B12min, -2.7) - pow(1+B12max, -2.7))/2.7;
 }

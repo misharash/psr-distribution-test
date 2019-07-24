@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
     else {
         double I_N = create_all(p, dist, e2); //create initial pulsars
         //calculate timestep from pulsar numbers and distribution function integrals
-        dt = I_N * Nbirth / (M_PI * K * I_Q * Nstart); //multipliers to be checked
+        dt = I_N * Nbirth / (2. * K * I_Q * Nstart);
         printf("Process %d: timestep %le s\n", myid, dt);
     }
     
