@@ -50,7 +50,7 @@ double create_chi(double x, CITable& N_chi_citable) {
 
 double create_B(double x) {
     double Bp = (1-x)*pow(1+B12min, -2.7) + x*pow(1+B12max, -2.7);
-    return pow(Bp, -1/2.7);
+    return pow(Bp, -1/2.7)-1;
 }
 
 //function that creates initial pulsars and returns distribution function integral over parameter area
