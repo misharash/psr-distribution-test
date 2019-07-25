@@ -26,11 +26,6 @@
 #include <cmath>
 
 //parameters that are assumed to be the same for all pulsars
-//const double M = 2e33; //common pulsar mass (gram) - not needed now
-const double R = 1e6; //common pulsar radius (cm)
-
-const double c = 3e10; //speed of light
-
 const double K = 1.; //coefficient for losses (evol.cpp), maybe need to fill it by reasonable number
 
 //simulation settings
@@ -43,7 +38,7 @@ const int Nsteps = 50*Nstart; //how many steps to do at all
 const int intsteps = 100000; //how many steps to use in numerical integration
 
 //minimal and maximal periods in seconds
-const double Pmin = 0.1;
+const double Pmin = 0.03;
 const double Pmax = 0.5;
 
 //minimal and maximal angles
